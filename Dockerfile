@@ -1,4 +1,4 @@
-FROM postgres:9.4.5
+FROM postgres:9.6.5
 MAINTAINER Andreas Wålm <andreas@walm.net>
 
 RUN apt-get update \
@@ -19,7 +19,7 @@ RUN curl -LO http://xrl.us/cpanm \
 
 
 # install pgtap
-ENV PGTAP_VERSION v0.95.0
+ENV PGTAP_VERSION v0.98.0
 RUN git clone git://github.com/theory/pgtap.git \
     && cd pgtap && git checkout tags/$PGTAP_VERSION \
     && make
