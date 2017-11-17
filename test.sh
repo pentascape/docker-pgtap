@@ -1,6 +1,6 @@
 #!/bin/bash
 DATABASE=
-HOST=
+HOST=localhost
 PORT=5432
 USER="postgres"
 PASSWORD=
@@ -11,21 +11,6 @@ function usage() { echo "Usage: $0 -h host -d database -p port -u username -w pa
 while getopts d:h:p:u:w:b:n:t: OPTION
 do
   case $OPTION in
-    d)
-      DATABASE=$OPTARG
-      ;;
-    h)
-      HOST=$OPTARG
-      ;;
-    p)
-      PORT=$OPTARG
-      ;;
-    u)
-      USER=$OPTARG
-      ;;
-    w)
-      PASSWORD=$OPTARG
-      ;;
     t)
       TESTS=$OPTARG
       ;;
@@ -35,7 +20,7 @@ do
   esac
 done
 
-if [[ -z $DATABASE ]] || [[ -z $HOST ]] || [[ -z $PORT ]] || [[ -z $USER ]] || [[ -z $TESTS ]]
+if [[ -z $TESTS ]]
 then
   usage
   exit 1
@@ -43,7 +28,7 @@ fi
 
 echo "Running tests: $TESTS"
 # install pgtap
-PGPASSWORD=$PASSWORD psql -h $HOST -p $PORT -d $DATABASE -U $USER -f /pgtap/sql/pgtap.sql > /dev/null 2>&1
+PGPASSWORD=${POSTGRES_PASSWORD} psql -h ${HOST} -p ${PORT} -d ${POSTGRES_DB} -U ${POSTGRES_USER} -f /pgtap/sql/pgtap.sql > /dev/null
 
 rc=$?
 # exit if pgtap failed to install
@@ -52,9 +37,9 @@ if [[ $rc != 0 ]] ; then
   exit $rc
 fi
 # run the tests
-PGPASSWORD=$PASSWORD pg_prove -h $HOST -p $PORT -d $DATABASE -U $USER $TESTS
+PGPASSWORD=${POSTGRES_PASSWORD} pg_prove -h $HOST -p ${PORT} -d ${POSTGRES_DB} -U ${POSTGRES_USER} ${TESTS}
 rc=$?
 # uninstall pgtap
-PGPASSWORD=$PASSWORD psql -h $HOST -p $PORT -d $DATABASE -U $USER -f /pgtap/sql/uninstall_pgtap.sql > /dev/null 2>&1
+PGPASSWORD=${POSTGRES_PASSWORD} psql -h $HOST -p ${PORT} -d ${POSTGRES_DB} -U ${POSTGRES_USER} -f /pgtap/sql/uninstall_pgtap.sql > /dev/null 2>&1
 # exit with return code of the tests
 exit $rc

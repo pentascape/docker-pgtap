@@ -1,5 +1,6 @@
 FROM postgres:9.6.5
 MAINTAINER Andreas Wålm <andreas@walm.net>
+MAINTAINER Pentascape <devops@pentascape.com>
 
 RUN apt-get update \
     && apt-get install -y build-essential git-core libv8-dev curl postgresql-server-dev-$PG_MAJOR \
@@ -24,10 +25,7 @@ RUN git clone git://github.com/theory/pgtap.git \
     && cd pgtap && git checkout tags/$PGTAP_VERSION \
     && make
 
-ADD ./test.sh /test.sh
-RUN chmod +x /test.sh
+VOLUME ["/t"]
 
-WORKDIR /
-
-CMD ["/test.sh"]
-ENTRYPOINT ["/test.sh"]
+ADD ./test.sh /usr/local/bin/test.sh
+RUN chmod +x /usr/local/bin/test.sh
