@@ -29,3 +29,4 @@ VOLUME ["/t"]
 
 ADD ./test.sh /usr/local/bin/test.sh
 RUN chmod +x /usr/local/bin/test.sh
+RUN ln -s /pgtap/sql/pgtap.sql /docker-entrypoint-initdb.d/pgtap.sql

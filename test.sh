@@ -42,8 +42,6 @@ then
 fi
 
 echo "Running tests: $TESTS"
-# install pgtap
-PGPASSWORD=${PASSWORD} psql -h ${HOST} -p ${PORT} -d ${DATABASE} -U ${USER} -f /pgtap/sql/pgtap.sql > /dev/null
 
 rc=$?
 # exit if pgtap failed to install
@@ -54,7 +52,6 @@ fi
 # run the tests
 PGPASSWORD=${PASSWORD} pg_prove -h ${HOST} -p ${PORT} -d ${DATABASE} -U ${USER} ${TESTS}
 rc=$?
-# uninstall pgtap
-PGPASSWORD=${PASSWORD} psql -h ${HOST} -p ${PORT} -d ${DATABASE} -U ${USER} -f /pgtap/sql/uninstall_pgtap.sql > /dev/null 2>&1
+
 # exit with return code of the tests
 exit $rc

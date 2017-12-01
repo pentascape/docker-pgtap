@@ -1,4 +1,4 @@
-NAME = walm/pgtap:0.95.0
+NAME = pentascape/pgtap:0.98.0
 
 all: build
 
